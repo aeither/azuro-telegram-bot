@@ -1,6 +1,6 @@
-import { TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
+import { TELEGRAM_BOT_TOKEN, TELEGRAM_BOT_TOKEN_LIVE } from '../lib/constants.ts'
 import { bot } from '../src/bot.ts'
-import { BotCommand } from '../src/deps.ts'
+import { Bot, BotCommand } from '../src/deps.ts'
 
 const commands: BotCommand[] = [{ command: 'hi', description: 'Hi!!!' }]
 
@@ -12,17 +12,23 @@ const commands: BotCommand[] = [{ command: 'hi', description: 'Hi!!!' }]
 await bot.api.setMyCommands(commands)
 
 // Live Bot Commands
-// const liveBot = new Bot(TELEGRAM_BOT_TOKEN_LIVE)
-// await liveBot.api.setMyCommands(commands)
+const liveBot = new Bot(TELEGRAM_BOT_TOKEN_LIVE)
+await liveBot.api.setMyCommands(commands)
 
 /**
  * Update Webhook
  */
 
 // Update Local Webhook
-const PROJECT_URL = 'https://411b-37-162-82-192.eu.ngrok.io'
-await bot.api.setWebhook(`${PROJECT_URL}/${TELEGRAM_BOT_TOKEN}`)
+// const PROJECT_URL = `https://575c-37-163-157-138.ngrok-free.app`
+// await fetch(
+//   `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook?url=${PROJECT_URL}/${TELEGRAM_BOT_TOKEN}`,
+// )
 
 // Update Live Webhook
-// const PROJECT_URL = 'https://azuro-bot.deno.dev'
-// await bot.api.setWebhook(`${PROJECT_URL}/${TELEGRAM_BOT_TOKEN_LIVE}`)
+const PROJECT_URL = 'https://aeither-azuro-telegram-bot.deno.dev'
+await fetch(
+  `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN_LIVE}/setWebhook?url=${PROJECT_URL}/${TELEGRAM_BOT_TOKEN_LIVE}`,
+)
+  .then((r) => r.json())
+  .then((r) => console.log(r))
