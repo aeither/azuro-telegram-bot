@@ -202,7 +202,9 @@
     "https://deno.land/x/grammy@v1.14.1/types.deno.ts": "df687b13babd2b521ff7576c17bce63e564f0bda8284c73132a48052a31396c1",
     "https://deno.land/x/grammy@v1.14.1/types.ts": "729415590dfa188dbe924dea614dff4e976babdbabb28a307b869fc25777cdf0",
     "https://esm.sh/@apollo/client@3.7.14": "36a4e89c8fd092e2aff7e9dbe9eeaeaa95f9b051a11866c0b52b177cec5cf79f",
+    "https://esm.sh/@azuro-org/dictionaries@3.0.1": "24650fd44cdf085bdb79308c6b36bbe4d4d531716e8ebe7873a7aed2c3b06368",
     "https://esm.sh/@grammyjs/types@2.12.1": "0548d80d53d35b2d62f15e85afb31d1ab32571bd33c6aaaa7b7757cc2cce5121",
+    "https://esm.sh/dayjs@1.11.7": "36a0a0f07c07078bed092feb02f2a19fd84c7a6b046a78395fb612295f626659",
     "https://esm.sh/stable/react@18.2.0/deno/react.mjs": "a5a73ee24acca4744ee22c51d9357f31968d1f684ce253bde222b4e26d09f49f",
     "https://esm.sh/v111/@grammyjs/types@2.12.1/api.d.ts": "efc90a31eb6f59ae5e7a4cf5838f46529e2fa6fa7e97a51a82dbd28afad21592",
     "https://esm.sh/v111/@grammyjs/types@2.12.1/deno/types.js": "acb44be31f2d89ab0814154c71d8907a0880a26a890fca017e2725356bbc6eae",
@@ -338,6 +340,18 @@
     "https://esm.sh/v119/ts-invariant@0.10.3/lib/invariant.d.ts": "200a7b7eb3163da4327412c650e43fbe66c73604a23a694f95ede53c250bfc3b",
     "https://esm.sh/v119/tslib@2.5.0/deno/tslib.mjs": "f04d5fa38e02562a349111a358c5c13e5d16ee8d072c3a4348e313e344da53e0",
     "https://esm.sh/v119/zen-observable-ts@1.2.5/deno/zen-observable-ts.mjs": "58246c1af8b292fccc7397f8377bf2dd1141b678e2ab7eb4e8220633c3e9653a",
-    "https://esm.sh/v119/zen-observable-ts@1.2.5/module.d.ts": "9b51dd74a388c13e157c457cc39d59dc2aae2134f6a21cc6b695219932cb8817"
+    "https://esm.sh/v119/zen-observable-ts@1.2.5/module.d.ts": "9b51dd74a388c13e157c457cc39d59dc2aae2134f6a21cc6b695219932cb8817",
+    "https://esm.sh/v122/@azuro-org/dictionaries@3.0.1/deno/dictionaries.mjs": "7e50557c62b7c04e95b17310ab2078352181061e41fe08c65e3721c8a4554473",
+    "https://esm.sh/v122/@azuro-org/dictionaries@3.0.1/lib/dictionaries/index.d.ts": "5d5621ff0d7e88343912c811d4e2d46b90bec4882ceef9f1c675502306f90654",
+    "https://esm.sh/v122/@azuro-org/dictionaries@3.0.1/lib/getMarketDescription.d.ts": "c868530462f4f00535f9f0a3f48bbf833e2a73eba889d544a76fe5cadad283da",
+    "https://esm.sh/v122/@azuro-org/dictionaries@3.0.1/lib/getMarketKey.d.ts": "69ca40f03fae844e5e0214aa5055a4b6b5e32682da123c9897f4eb60a4f7c527",
+    "https://esm.sh/v122/@azuro-org/dictionaries@3.0.1/lib/getMarketName.d.ts": "ff4fd6c2bd0ea3a5a1387cf94d9d0ea0868abbd97317ef07f16f666f38a17819",
+    "https://esm.sh/v122/@azuro-org/dictionaries@3.0.1/lib/getSelectionName.d.ts": "06072f780f110507d984767576cc68998f02d950c725c6f7b59e850761747dd0",
+    "https://esm.sh/v122/@azuro-org/dictionaries@3.0.1/lib/index.d.ts": "883725e137329d51aab8e05c7f396f5f2cfec5adfce0e53fffe537216a504a8b",
+    "https://esm.sh/v122/@azuro-org/dictionaries@3.0.1/lib/types.d.ts": "2775cf46b82149601f88f316ca14533bc62f4ac2813fa18371f76df69a6594cf",
+    "https://esm.sh/v122/dayjs@1.11.7/deno/dayjs.mjs": "f96788cc2d405f7c691645a29a64a2616025a1641c6d4defc0b63a105693dc65",
+    "https://esm.sh/v122/dayjs@1.11.7/index.d.ts": "09d906c1aeb34304755b072698e6728d3e83ed0b6366cf82e695f7a0f078564e",
+    "https://esm.sh/v122/dayjs@1.11.7/locale/index.d.ts": "a247d7fed180d14462353fc41e13e6b9bff67bd4d7ff10f21afbfba1f77d8b88",
+    "https://esm.sh/v122/dayjs@1.11.7/locale/types.d.ts": "73a0ee6395819b063df4b148211985f2e1442945c1a057204cf4cf6281760dc3"
   }
 }
