@@ -17,7 +17,8 @@ export const bot = new Bot(TELEGRAM_BOT_TOKEN, {
  */
 bot.command('start', async (ctx) => {
   try {
-    const actorAddress = '0xb57fc8e76e9531137d698f41a5ec527b22bfc4b3'
+    // const actorAddress = '0xb57fc8e76e9531137d698f41a5ec527b22bfc4b3'
+    const actorAddress = ctx.match
     const result = await getBetsHistory(actorAddress)
 
     // Handle the result as needed

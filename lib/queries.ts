@@ -71,6 +71,8 @@ const QUERY = `
 `
 
 export async function getBetsHistory(actorAddress: string) {
+  const formattedAddress = actorAddress.replace(/\s/g, '') // Remove spaces from the address
+
   try {
     const result = await client.query<BetData>({
       query: gql`
@@ -79,7 +81,7 @@ export async function getBetsHistory(actorAddress: string) {
       variables: {
         first: 10,
         where: {
-          actor: actorAddress.toLowerCase(),
+          actor: formattedAddress.toLowerCase(),
         },
       },
     })
