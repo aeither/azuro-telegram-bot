@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "export DEBUG='grammy*' && deno run -A --watch src/poll.ts",
+    "dev:reload": "deno run -A --watch --reload src/poll.ts",
+
+    "start:bot": "deno run -A --watch src/server.ts",
+    "start:ngrok": "ngrok http 8000",
+    "commands": "deno run -A scripts/index.ts"
+  }
+}
