@@ -1,5 +1,5 @@
 import { TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
-import { getBetsHistory } from '../lib/queries.ts'
+import { getBetsHistory } from '../lib/getBetsHistory.ts'
 import { Bot } from './deps.ts'
 
 export const bot = new Bot(TELEGRAM_BOT_TOKEN, {

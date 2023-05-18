@@ -1,19 +1,7 @@
-import { ApolloClient, InMemoryCache, gql } from 'https://esm.sh/@apollo/client@3.7.14'
+import { gql } from 'https://esm.sh/@apollo/client@3.7.14'
+import { client } from './apolloClient.ts'
 import { BetData } from './types.ts'
 
-/**
- * GraphQL
- */
-const cache = new InMemoryCache()
-
-const client = new ApolloClient({
-  cache,
-  uri: 'https://thegraph.azuro.org/subgraphs/name/azuro-protocol/azuro-api-gnosis',
-})
-
-/**
- * Queries
- */
 const QUERY = `
   query BetsHistory($first: Int, $where: Bet_filter!) {
     bets(
