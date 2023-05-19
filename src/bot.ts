@@ -8,6 +8,7 @@ import { GATEWAY_FM_KEY, TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
 import { getBetsHistory } from '../lib/getBetsHistory.ts'
 import { Bot, Context, session, SessionFlavor } from './deps.ts'
 import { freeStorage } from 'https://deno.land/x/grammy_storages@v2.2.0/free/src/mod.ts'
+import { convertWeiToGwei } from '../lib/helpers.ts'
 
 interface RpcResponse {
   jsonrpc: string
@@ -108,12 +109,13 @@ bot.command('gasprice', async (ctx) => {
     const response = await fetch(url, requestOptions)
     const data: RpcResponse = await response.json()
     console.log(data)
-    gasPrice = parseInt(data.result, 16)
+    const weiValue = parseInt(data.result, 16)
+    gasPrice = convertWeiToGwei(weiValue)
   } catch (error) {
     console.log('error', error)
   }
 
-  ctx.reply(`Gas Price: ${gasPrice}`)
+  ctx.reply(`Gas Price: ${gasPrice} gwei`)
 })
 
 bot.command('ping', (ctx) => ctx.reply(`Pong! ${new Date()} ${Date.now()}`))
