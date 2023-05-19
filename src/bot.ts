@@ -8,9 +8,10 @@ import { freeStorage } from 'https://deno.land/x/grammy_storages@v2.2.0/free/src
 import { GATEWAY_FM_KEY, TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
 import { getBetsHistory } from '../lib/getBetsHistory.ts'
 import { getLiquidityPoolTransactions } from '../lib/getLiquidityPoolTransactions.ts'
-import { convertWeiToGwei, removeAddress } from '../lib/helpers.ts'
+import { convertWeiToGwei, formatWeiToEth, removeAddress } from '../lib/helpers.ts'
 import { publicClient } from '../lib/viemClient.ts'
 import { Bot, Context, SessionFlavor, session } from './deps.ts'
+import { getTvls } from '../lib/getTvl.ts'
 
 interface RpcResponse {
   jsonrpc: string
@@ -192,6 +193,7 @@ bot.command('transactions', async (ctx) => {
     // const actorAddress = '0xef18f2f054a7ad2909333051aa42d5c0bb3f92f6'
     const actorAddress = ctx.match
     const result = await getLiquidityPoolTransactions(actorAddress)
+
     result.data.liquidityPoolTransactions.map((tx) => {
       const { amount, blockTimestamp, txHash, type } = tx
 
@@ -214,15 +216,40 @@ bot.command('balance', async (ctx) => {
   const balance = await publicClient.getBalance({
     address: address,
   })
-  function formatWeiToEth(wei: string | number | bigint): string {
-    const weiValue = typeof wei === 'string' ? BigInt(wei) : BigInt(wei)
-    const ethValue = weiValue / BigInt(10 ** 18) // 1 Ether = 10^18 Wei
-    return ethValue.toString()
-  }
 
   const formattedValue = formatWeiToEth(balance)
 
   ctx.reply(`Balance: ${formattedValue}`)
+})
+
+bot.command('tvl', async (ctx) => {
+  let replyMessage = ''
+  try {
+    const tvls = await getTvls()
+
+    tvls.data.liquidityPoolContracts.map((tvlData) => {
+      const {
+        rawTvl,
+        address,
+        betsCount,
+        betsAmount,
+        depositedAmount,
+        withdrawnAmount,
+        apr,
+      } = tvlData
+
+      replyMessage +=
+        `*Contract* [${address}](https://gnosisscan.io/address/${address}) \n` +
+        `*Bets amount* ${formatWeiToEth(betsAmount)} \n` +
+        `*Bets count* ${betsCount} \n` +
+        `*Deposited* ${formatWeiToEth(depositedAmount)} \n` +
+        `*Withdrawn* ${formatWeiToEth(withdrawnAmount)} \n` +
+        `*TVL* ${formatWeiToEth(rawTvl)} \n` +
+        `*APR* ${apr} \n\n`
+    })
+  } catch (error) {}
+
+  ctx.reply(`${replyMessage}`, { parse_mode: 'Markdown' })
 })
 
 bot.command('ping', (ctx) => ctx.reply(`Pong! ${new Date()} ${Date.now()}`))

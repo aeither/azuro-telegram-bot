@@ -80,3 +80,27 @@ interface LiquidityPoolTransaction {
 export interface TransactionsData {
   liquidityPoolTransactions: LiquidityPoolTransaction[]
 }
+
+/**
+ * getTvl
+ */
+
+type LiquidityPoolContract = {
+  __typename: string
+  id: string
+  chainId: number
+  chainName: string
+  address: string
+  betsAmount: string
+  betsCount: string
+  depositedAmount: string
+  withdrawnAmount: string
+  rawTvl: string
+  tvl: string
+  rawApr: string
+  apr: string
+}
+
+export type TvlsData = {
+  liquidityPoolContracts: LiquidityPoolContract[]
+}
