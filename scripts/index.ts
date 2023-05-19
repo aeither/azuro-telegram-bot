@@ -8,6 +8,7 @@ const commands: BotCommand[] = [
   { command: 'removewatchlist', description: 'Removes a wallet from tracking' },
   { command: 'watchlist', description: 'Lists all the tracked wallets' },
   { command: 'gasprice', description: 'Use Gnosis Mainnet Gas Tracker' },
+  { command: 'transactions', description: 'Show address transactions' },
 ]
 
 /**

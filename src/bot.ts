@@ -4,11 +4,12 @@ import {
 } from 'https://esm.sh/@azuro-org/dictionaries@3.0.1'
 import dayjs from 'https://esm.sh/dayjs@1.11.7'
 
+import { freeStorage } from 'https://deno.land/x/grammy_storages@v2.2.0/free/src/mod.ts'
 import { GATEWAY_FM_KEY, TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
 import { getBetsHistory } from '../lib/getBetsHistory.ts'
-import { Bot, Context, session, SessionFlavor } from './deps.ts'
-import { freeStorage } from 'https://deno.land/x/grammy_storages@v2.2.0/free/src/mod.ts'
+import { getLiquidityPoolTransactions } from '../lib/getLiquidityPoolTransactions.ts'
 import { convertWeiToGwei, removeAddress } from '../lib/helpers.ts'
+import { Bot, Context, SessionFlavor, session } from './deps.ts'
 
 interface RpcResponse {
   jsonrpc: string
@@ -162,6 +163,50 @@ bot.command('watchlist', (ctx) => {
     .join('\n')
 
   ctx.reply(`Watchlist: \n ${formattedString}`, { parse_mode: 'Markdown' })
+})
+
+bot.command('transactions', async (ctx) => {
+  function formatTimestamp(timestamp: number): string {
+    const date = new Date(timestamp * 1000)
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      timeZone: 'UTC',
+    }
+    return date.toLocaleString('en-US', options)
+  }
+
+  function shortenAddress(address: string, charsToShow = 4): string {
+    const prefix = address.slice(0, charsToShow)
+    const suffix = address.slice(-charsToShow)
+    return `${prefix}...${suffix}`
+  }
+
+  let replyMessage = ''
+  try {
+    // const actorAddress = '0xef18f2f054a7ad2909333051aa42d5c0bb3f92f6'
+    const actorAddress = ctx.match
+    const result = await getLiquidityPoolTransactions(actorAddress)
+    console.log('🚀 ~ file: bot.ts:174 ~ bot.command ~ result:', result)
+    result.data.liquidityPoolTransactions.map((tx) => {
+      const { amount, blockTimestamp, txHash, type } = tx
+
+      const formattedDate = formatTimestamp(+blockTimestamp)
+      const formattedHash = shortenAddress(txHash)
+
+      replyMessage +=
+        `*Time* ${formattedDate} \n` +
+        `*Type* ${type} \n` +
+        `*Hash* ${formattedHash} \n` +
+        `*Amount* ${amount} \n\n`
+    })
+  } catch (error) {}
+
+  ctx.reply(replyMessage, { parse_mode: 'Markdown' })
 })
 
 bot.command('ping', (ctx) => ctx.reply(`Pong! ${new Date()} ${Date.now()}`))

@@ -62,3 +62,21 @@ interface Bet {
 export interface BetData {
   bets: Bet[]
 }
+
+/**
+ * getLiquidityPoolTransactions
+ */
+
+interface LiquidityPoolTransaction {
+  __typename: string
+  id: string
+  account: string
+  amount: string
+  txHash: string
+  type: string
+  blockTimestamp: string
+}
+
+export interface TransactionsData {
+  liquidityPoolTransactions: LiquidityPoolTransaction[]
+}
