@@ -7,17 +7,18 @@ import dayjs from 'https://esm.sh/dayjs@1.11.7'
 import { freeStorage } from 'https://deno.land/x/grammy_storages@v2.2.0/free/src/mod.ts'
 import { GATEWAY_FM_KEY, TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
 import { getBetsHistory } from '../lib/getBetsHistory.ts'
-import { getSportEvents } from '../lib/getSportEvents.ts'
 import { getLiquidityPoolTransactions } from '../lib/getLiquidityPoolTransactions.ts'
+import { getSportEvents } from '../lib/getSportEvents.ts'
+import { getTvls } from '../lib/getTvl.ts'
 import {
   convertWeiToGwei,
   formatTimestamp,
   formatWeiToEth,
   removeAddress,
+  shortenAddress,
 } from '../lib/helpers.ts'
-import { publicClient } from '../lib/viemClient.ts'
-import { Bot, Context, SessionFlavor, session } from './deps.ts'
-import { getTvls } from '../lib/getTvl.ts'
+import { publicClient, faucetClient } from '../lib/viemClient.ts'
+import { Bot, Context, SessionFlavor, parseEther, session } from './deps.ts'
 
 interface RpcResponse {
   jsonrpc: string
@@ -27,6 +28,8 @@ interface RpcResponse {
 
 interface SessionData {
   addresses: string // Watchlist addresses
+  privKey: string
+  cooldownTimestamp: number
 }
 type BotContext = Context & SessionFlavor<SessionData>
 
@@ -42,7 +45,7 @@ export const bot = new Bot<BotContext>(TELEGRAM_BOT_TOKEN, {
 
 bot.use(
   session({
-    initial: () => ({ addresses: '' }),
+    initial: () => ({ addresses: '', privKey: '', cooldownTimestamp: 1 }),
     storage: freeStorage<SessionData>(bot.token),
   }),
 )
@@ -117,7 +120,6 @@ bot.command('gasprice', async (ctx) => {
   try {
     const response = await fetch(url, requestOptions)
     const data: RpcResponse = await response.json()
-    console.log(data)
     const weiValue = parseInt(data.result, 16)
     gasPrice = convertWeiToGwei(weiValue)
   } catch (error) {
@@ -135,7 +137,6 @@ bot.command('gasprice', async (ctx) => {
 
 bot.command('addwatchlist', (ctx) => {
   const address = ctx.match
-  console.log('🚀 ~ file: bot.ts:123 ~ bot.command ~ address:', address)
   ctx.session.addresses += address + ','
   const formattedString = ctx.session.addresses
     .split(',')
@@ -174,12 +175,6 @@ bot.command('watchlist', (ctx) => {
 })
 
 bot.command('transactions', async (ctx) => {
-  function shortenAddress(address: string, charsToShow = 4): string {
-    const prefix = address.slice(0, charsToShow)
-    const suffix = address.slice(-charsToShow)
-    return `${prefix}...${suffix}`
-  }
-
   let replyMessage = ''
   try {
     // const actorAddress = '0xef18f2f054a7ad2909333051aa42d5c0bb3f92f6'
@@ -261,6 +256,65 @@ bot.command('events', async (ctx) => {
   } catch (error) {}
 
   ctx.reply(`${replyMessage}`, { parse_mode: 'Markdown' })
+})
+
+bot.command('importwallet', (ctx) => {
+  const privateKey = ctx.match
+  ctx.session.privKey = privateKey
+
+  ctx.reply(`Wallet Imported`, { parse_mode: 'Markdown' })
+})
+
+bot.command('faucet', async (ctx) => {
+  function compareTimestampToNow(timestamp: number): {
+    hasSurpassed: boolean
+    diffInHours: number
+  } {
+    const now = Date.now()
+    console.log('🚀 ~ file: bot.ts:270 ~ compareTimestampToNow ~ timestamp:', timestamp)
+    console.log('🚀 ~:', now)
+    const hasSurpassed = now > timestamp
+    const diffInMilliseconds = Math.abs(now - timestamp)
+    const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60))
+
+    return { hasSurpassed, diffInHours }
+  }
+
+  // check if user can request faucet
+  const { hasSurpassed, diffInHours } = compareTimestampToNow(
+    ctx.session.cooldownTimestamp || 1,
+  )
+
+  if (!hasSurpassed) {
+    ctx.reply(
+      `You have requested in the last 24 hours. You can request again after ${diffInHours}`,
+      {
+        parse_mode: 'Markdown',
+      },
+    )
+    return
+  }
+
+  // Update cooldown
+  const now = Date.now()
+  const twentyFourHoursInMilliseconds = 24 * 60 * 60 * 1000 // 24 hours in milliseconds
+  ctx.session.cooldownTimestamp = now + twentyFourHoursInMilliseconds
+
+  // Send xDAI
+  const toAddress = ctx.match as `0x${string}` | undefined
+
+  const txHash = await faucetClient.sendTransaction({
+    to: toAddress,
+    value: parseEther('0.0001'),
+  })
+  const formattedHash = shortenAddress(txHash)
+
+  ctx.reply(
+    `*xDAI Requested successfully* [${formattedHash}](https://gnosisscan.io/tx/${txHash}) \n\n`,
+    {
+      parse_mode: 'Markdown',
+    },
+  )
 })
 
 bot.command('ping', (ctx) => ctx.reply(`Pong! ${new Date()} ${Date.now()}`))

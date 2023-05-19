@@ -1,5 +1,5 @@
 import { gql } from 'https://esm.sh/@apollo/client@3.7.14'
-import { client } from './apolloClient.ts'
+import { apolloClient } from './apolloClient.ts'
 import { BetData } from './types.ts'
 
 const QUERY = `
@@ -62,7 +62,7 @@ export async function getBetsHistory(actorAddress: string) {
   const formattedAddress = actorAddress.replace(/\s/g, '') // Remove spaces from the address
 
   try {
-    const result = await client.query<BetData>({
+    const result = await apolloClient.query<BetData>({
       query: gql`
         ${QUERY}
       `,

@@ -1,5 +1,5 @@
 import { gql } from 'https://esm.sh/@apollo/client@3.7.14'
-import { client } from './apolloClient.ts'
+import { apolloClient } from './apolloClient.ts'
 import { TvlsData } from './types.ts'
 
 const QUERY = `
@@ -26,7 +26,7 @@ query LiquidityPool($first: Int) {
 
 export async function getTvls() {
   try {
-    const result = await client.query<TvlsData>({
+    const result = await apolloClient.query<TvlsData>({
       query: gql`
         ${QUERY}
       `,

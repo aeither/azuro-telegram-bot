@@ -14,3 +14,6 @@ if (!TELEGRAM_BOT_TOKEN_LIVE) throw new Error('TELEGRAM_BOT_TOKEN_LIVE not found
 
 export const GATEWAY_FM_KEY = Deno.env.get('GATEWAY_FM_KEY') as string
 if (!GATEWAY_FM_KEY) throw new Error('GATEWAY_FM_KEY not found')
+
+export const FAUCET_PRIVATE_KEY = Deno.env.get('FAUCET_PRIVATE_KEY') as string
+if (!FAUCET_PRIVATE_KEY) throw new Error('FAUCET_PRIVATE_KEY not found')

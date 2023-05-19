@@ -30,3 +30,9 @@ export function formatTimestamp(timestamp: number): string {
   }
   return date.toLocaleString('en-US', options)
 }
+
+export function shortenAddress(address: string, charsToShow = 4): string {
+  const prefix = address.slice(0, charsToShow)
+  const suffix = address.slice(-charsToShow)
+  return `${prefix}...${suffix}`
+}
