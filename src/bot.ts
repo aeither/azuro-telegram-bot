@@ -10,6 +10,7 @@ import { getBetsHistory } from '../lib/getBetsHistory.ts'
 import { getLiquidityPoolTransactions } from '../lib/getLiquidityPoolTransactions.ts'
 import { convertWeiToGwei, removeAddress } from '../lib/helpers.ts'
 import { Bot, Context, SessionFlavor, session } from './deps.ts'
+import { publicClient } from '../lib/viemClient.ts'
 
 interface RpcResponse {
   jsonrpc: string
@@ -18,7 +19,7 @@ interface RpcResponse {
 }
 
 interface SessionData {
-  addresses: string
+  addresses: string // Watchlist addresses
 }
 type BotContext = Context & SessionFlavor<SessionData>
 
@@ -191,7 +192,6 @@ bot.command('transactions', async (ctx) => {
     // const actorAddress = '0xef18f2f054a7ad2909333051aa42d5c0bb3f92f6'
     const actorAddress = ctx.match
     const result = await getLiquidityPoolTransactions(actorAddress)
-    console.log('🚀 ~ file: bot.ts:174 ~ bot.command ~ result:', result)
     result.data.liquidityPoolTransactions.map((tx) => {
       const { amount, blockTimestamp, txHash, type } = tx
 
@@ -199,14 +199,30 @@ bot.command('transactions', async (ctx) => {
       const formattedHash = shortenAddress(txHash)
 
       replyMessage +=
-        `*Time* ${formattedDate} \n` +
-        `*Type* ${type} \n` +
-        `*Hash* ${formattedHash} \n` +
-        `*Amount* ${amount} \n\n`
+        `${formattedDate} \n` +
+        `${type} ${amount} xDAI \n` +
+        `*Hash* ${formattedHash} \n\n`
     })
   } catch (error) {}
 
   ctx.reply(replyMessage, { parse_mode: 'Markdown' })
+})
+
+bot.command('balance', async (ctx) => {
+  const address = ctx.match as `0x${string}`
+
+  const balance = await publicClient.getBalance({
+    address: address,
+  })
+  function formatWeiToEth(wei: string | number | bigint): string {
+    const weiValue = typeof wei === 'string' ? BigInt(wei) : BigInt(wei)
+    const ethValue = weiValue / BigInt(10 ** 18) // 1 Ether = 10^18 Wei
+    return ethValue.toString()
+  }
+
+  const formattedValue = formatWeiToEth(balance)
+
+  ctx.reply(`Balance: ${formattedValue}`)
 })
 
 bot.command('ping', (ctx) => ctx.reply(`Pong! ${new Date()} ${Date.now()}`))
