@@ -2,7 +2,12 @@ import { TELEGRAM_BOT_TOKEN, TELEGRAM_BOT_TOKEN_LIVE } from '../lib/constants.ts
 import { bot } from '../src/bot.ts'
 import { Bot, BotCommand } from '../src/deps.ts'
 
-const commands: BotCommand[] = [{ command: 'hi', description: 'Hi!!!' }]
+const commands: BotCommand[] = [
+  { command: 'bets', description: 'Show address bets history' },
+  { command: 'addwatchlist', description: 'Adds a new wallet to track' },
+  { command: 'removewatchlist', description: 'Removes a wallet from tracking' },
+  { command: 'watchlist', description: 'Lists all the tracked wallets' },
+]
 
 /**
  * Update commands
