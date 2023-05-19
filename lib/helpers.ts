@@ -16,3 +16,17 @@ export function formatWeiToEth(wei: string | number | bigint): string {
   const ethValue = weiValue / BigInt(10 ** 18) // 1 Ether = 10^18 Wei
   return ethValue.toString()
 }
+
+export function formatTimestamp(timestamp: number): string {
+  const date = new Date(timestamp * 1000)
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    timeZone: 'UTC',
+  }
+  return date.toLocaleString('en-US', options)
+}

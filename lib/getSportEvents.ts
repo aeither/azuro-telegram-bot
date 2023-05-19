@@ -1,5 +1,6 @@
 import { gql } from 'https://esm.sh/@apollo/client@3.7.14'
 import { client } from './apolloClient.ts'
+import { EventsData } from './types.ts'
 
 const QUERY = `
   query Games($where: Game_filter!) {
@@ -25,7 +26,7 @@ const QUERY = `
 
 export async function getSportEvents() {
   try {
-    const result = await client.query<any>({
+    const result = await client.query<EventsData>({
       query: gql`
         ${QUERY}
       `,

@@ -7,8 +7,14 @@ import dayjs from 'https://esm.sh/dayjs@1.11.7'
 import { freeStorage } from 'https://deno.land/x/grammy_storages@v2.2.0/free/src/mod.ts'
 import { GATEWAY_FM_KEY, TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
 import { getBetsHistory } from '../lib/getBetsHistory.ts'
+import { getSportEvents } from '../lib/getSportEvents.ts'
 import { getLiquidityPoolTransactions } from '../lib/getLiquidityPoolTransactions.ts'
-import { convertWeiToGwei, formatWeiToEth, removeAddress } from '../lib/helpers.ts'
+import {
+  convertWeiToGwei,
+  formatTimestamp,
+  formatWeiToEth,
+  removeAddress,
+} from '../lib/helpers.ts'
 import { publicClient } from '../lib/viemClient.ts'
 import { Bot, Context, SessionFlavor, session } from './deps.ts'
 import { getTvls } from '../lib/getTvl.ts'
@@ -168,20 +174,6 @@ bot.command('watchlist', (ctx) => {
 })
 
 bot.command('transactions', async (ctx) => {
-  function formatTimestamp(timestamp: number): string {
-    const date = new Date(timestamp * 1000)
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZone: 'UTC',
-    }
-    return date.toLocaleString('en-US', options)
-  }
-
   function shortenAddress(address: string, charsToShow = 4): string {
     const prefix = address.slice(0, charsToShow)
     const suffix = address.slice(-charsToShow)
@@ -246,6 +238,25 @@ bot.command('tvl', async (ctx) => {
         `*Withdrawn* ${formatWeiToEth(withdrawnAmount)} \n` +
         `*TVL* ${formatWeiToEth(rawTvl)} \n` +
         `*APR* ${apr} \n\n`
+    })
+  } catch (error) {}
+
+  ctx.reply(`${replyMessage}`, { parse_mode: 'Markdown' })
+})
+
+bot.command('events', async (ctx) => {
+  let replyMessage = ''
+  try {
+    const events = await getSportEvents()
+
+    events.data.games.map((event) => {
+      const { league, participants, sport, startsAt } = event
+
+      replyMessage +=
+        `${sport.name} \n` +
+        `${league.name} - ${league.country.name} \n` +
+        `${formatTimestamp(+startsAt)} \n` +
+        `*Participants* ${participants.map((p) => p.name).join(', ')} \n\n`
     })
   } catch (error) {}
 

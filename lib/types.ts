@@ -44,6 +44,14 @@ interface Game {
   startsAt: string
 }
 
+export interface EventsData {
+  games: Game[]
+}
+
+/**
+ * getBetsHistory
+ */
+
 interface Bet {
   __typename: string
   id: string
