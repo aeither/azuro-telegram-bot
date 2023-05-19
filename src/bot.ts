@@ -8,7 +8,7 @@ import { GATEWAY_FM_KEY, TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
 import { getBetsHistory } from '../lib/getBetsHistory.ts'
 import { Bot, Context, session, SessionFlavor } from './deps.ts'
 import { freeStorage } from 'https://deno.land/x/grammy_storages@v2.2.0/free/src/mod.ts'
-import { convertWeiToGwei } from '../lib/helpers.ts'
+import { convertWeiToGwei, removeAddress } from '../lib/helpers.ts'
 
 interface RpcResponse {
   jsonrpc: string
@@ -17,7 +17,7 @@ interface RpcResponse {
 }
 
 interface SessionData {
-  count: number
+  addresses: string
 }
 type BotContext = Context & SessionFlavor<SessionData>
 
@@ -33,7 +33,7 @@ export const bot = new Bot<BotContext>(TELEGRAM_BOT_TOKEN, {
 
 bot.use(
   session({
-    initial: () => ({ count: 0 }),
+    initial: () => ({ addresses: '' }),
     storage: freeStorage<SessionData>(bot.token),
   }),
 )
@@ -116,6 +116,37 @@ bot.command('gasprice', async (ctx) => {
   }
 
   ctx.reply(`Gas Price: ${gasPrice} gwei`)
+})
+
+bot.command('addwatchlist', (ctx) => {
+  const address = ctx.match
+  console.log('🚀 ~ file: bot.ts:123 ~ bot.command ~ address:', address)
+  ctx.session.addresses += address + ','
+  const formattedString = ctx.session.addresses
+    .split(',')
+    .map((address) => `\`/bets ${address}\``)
+    .join('\n')
+
+  ctx.reply(
+    `Added ${address} to the Watchlist \n\n New Watchlist: \n ${formattedString}`,
+    { parse_mode: 'Markdown' },
+  )
+})
+
+bot.command('removewatchlist', (ctx) => {
+  const address = ctx.match
+
+  const updatedAddresses = removeAddress(ctx.session.addresses.split(','), address)
+  ctx.session.addresses = updatedAddresses.join(',')
+
+  const formattedString = updatedAddresses
+    .map((address) => `\`/bets ${address}\``)
+    .join('\n')
+
+  ctx.reply(
+    `Address ${address} removed from the Watchlist \n\n New Watchlist: \n ${formattedString}`,
+    { parse_mode: 'Markdown' },
+  )
 })
 
 bot.command('ping', (ctx) => ctx.reply(`Pong! ${new Date()} ${Date.now()}`))
