@@ -201,6 +201,8 @@
     "https://deno.land/x/grammy@v1.14.1/platform.deno.ts": "b6bd2cd744a4d02df71a8efa553adae586d68f3bb8dce288caa6111d12169219",
     "https://deno.land/x/grammy@v1.14.1/types.deno.ts": "df687b13babd2b521ff7576c17bce63e564f0bda8284c73132a48052a31396c1",
     "https://deno.land/x/grammy@v1.14.1/types.ts": "729415590dfa188dbe924dea614dff4e976babdbabb28a307b869fc25777cdf0",
+    "https://deno.land/x/grammy_storages@v2.2.0/free/src/adapter.ts": "0a85a6363b12dd0f6d79d1ca469eb7677082050c2e60592441f929f95621dc0d",
+    "https://deno.land/x/grammy_storages@v2.2.0/free/src/mod.ts": "6485c5bf548fc73446f54f397660a59ffcaf0bcc465b6050c2c762848c2c0ba5",
     "https://esm.sh/@apollo/client@3.7.14": "36a4e89c8fd092e2aff7e9dbe9eeaeaa95f9b051a11866c0b52b177cec5cf79f",
     "https://esm.sh/@azuro-org/dictionaries@3.0.1": "24650fd44cdf085bdb79308c6b36bbe4d4d531716e8ebe7873a7aed2c3b06368",
     "https://esm.sh/@grammyjs/types@2.12.1": "0548d80d53d35b2d62f15e85afb31d1ab32571bd33c6aaaa7b7757cc2cce5121",
