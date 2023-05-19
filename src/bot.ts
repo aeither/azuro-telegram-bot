@@ -115,7 +115,13 @@ bot.command('gasprice', async (ctx) => {
     console.log('error', error)
   }
 
-  ctx.reply(`Gas Price: ${gasPrice} gwei`)
+  ctx.reply(
+    `Gas Price \n\n Slow: ${
+      gasPrice ? (gasPrice * 0.9).toFixed(2) : null
+    } gwei \n Normal: ${gasPrice} gwei (10-30 secs) \n Fast: ${
+      gasPrice ? (gasPrice * 1.2).toFixed(2) : null
+    } gwei`,
+  )
 })
 
 bot.command('addwatchlist', (ctx) => {
