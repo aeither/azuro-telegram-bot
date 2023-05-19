@@ -149,4 +149,13 @@ bot.command('removewatchlist', (ctx) => {
   )
 })
 
+bot.command('watchlist', (ctx) => {
+  const formattedString = ctx.session.addresses
+    .split(',')
+    .map((address) => `\`/bets ${address}\``)
+    .join('\n')
+
+  ctx.reply(`Watchlist: \n ${formattedString}`, { parse_mode: 'Markdown' })
+})
+
 bot.command('ping', (ctx) => ctx.reply(`Pong! ${new Date()} ${Date.now()}`))
