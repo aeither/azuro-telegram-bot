@@ -17,7 +17,7 @@ import {
   removeAddress,
   shortenAddress,
 } from '../lib/helpers.ts'
-import { publicClient, faucetClient } from '../lib/viemClient.ts'
+import { faucetClient, publicClient } from '../lib/viemClient.ts'
 import { Bot, Context, SessionFlavor, parseEther, session } from './deps.ts'
 
 interface RpcResponse {
@@ -55,10 +55,13 @@ bot.use(
  */
 bot.command('bets', async (ctx) => {
   let replyMessage = ''
+  let profit = 0
+
   try {
-    // const actorAddress = '0xb57fc8e76e9531137d698f41a5ec527b22bfc4b3'
+    // const actorAddress = '0x7d2f1f75bd76da9558bd0c8bfc0618c96a6d40e5'
     const actorAddress = ctx.match
     const result = await getBetsHistory(actorAddress)
+
     result.data.bets.map((bet) => {
       const { amount, potentialPayout, status, odds, outcome } = bet
 
@@ -66,9 +69,9 @@ bot.command('bets', async (ctx) => {
       const isResolved = status === 'Resolved'
       const isCanceled = status === 'Canceled'
 
-      const betOdds = parseFloat(odds).toFixed(4) + 'USDT'
-      const betAmount = parseFloat(amount).toFixed(2) + 'USDT'
-      const possibleWin = parseFloat(potentialPayout).toFixed(2) + 'USDT'
+      const betOdds = parseFloat(odds).toFixed(4) + 'WXDAI'
+      const betAmount = parseFloat(amount).toFixed(2) + 'WXDAI'
+      const possibleWin = parseFloat(potentialPayout).toFixed(2) + 'WXDAI'
       const betStatus = isResolved
         ? isWin
           ? 'Win'
@@ -89,11 +92,17 @@ bot.command('bets', async (ctx) => {
         `${bet.game.sport.name} \n` +
         `${dayjs(+bet.game.startsAt * 1000).format('DD MMM HH:mm')} \n` +
         `${bet.game.league.country.name} - ${bet.game.league.name} \n\n`
-      // const gameInfo =
+
+      if (betStatus === 'Lose') {
+        profit -= parseFloat(amount)
+      } else if (betStatus === 'Win') {
+        profit += parseFloat(potentialPayout)
+      }
     })
   } catch (error) {}
 
   ctx.reply(replyMessage, { parse_mode: 'Markdown' })
+  ctx.reply(`Profit/Loss: ${profit.toFixed(2)} WXDAI`, { parse_mode: 'Markdown' })
 })
 
 bot.command('gasprice', async (ctx) => {
@@ -198,6 +207,7 @@ bot.command('transactions', async (ctx) => {
 })
 
 bot.command('balance', async (ctx) => {
+  // const address = '0xef18f2f054a7ad2909333051aa42d5c0bb3f92f6'
   const address = ctx.match as `0x${string}`
 
   const balance = await publicClient.getBalance({
