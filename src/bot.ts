@@ -9,8 +9,8 @@ import { GATEWAY_FM_KEY, TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
 import { getBetsHistory } from '../lib/getBetsHistory.ts'
 import { getLiquidityPoolTransactions } from '../lib/getLiquidityPoolTransactions.ts'
 import { convertWeiToGwei, removeAddress } from '../lib/helpers.ts'
-import { Bot, Context, SessionFlavor, session } from './deps.ts'
 import { publicClient } from '../lib/viemClient.ts'
+import { Bot, Context, SessionFlavor, session } from './deps.ts'
 
 interface RpcResponse {
   jsonrpc: string
@@ -201,7 +201,7 @@ bot.command('transactions', async (ctx) => {
       replyMessage +=
         `${formattedDate} \n` +
         `${type} ${amount} xDAI \n` +
-        `*Hash* ${formattedHash} \n\n`
+        `*Hash* [${formattedHash}](https://gnosisscan.io/tx/${txHash}) \n\n`
     })
   } catch (error) {}
 
