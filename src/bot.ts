@@ -271,8 +271,6 @@ bot.command('faucet', async (ctx) => {
     diffInHours: number
   } {
     const now = Date.now()
-    console.log('🚀 ~ file: bot.ts:270 ~ compareTimestampToNow ~ timestamp:', timestamp)
-    console.log('🚀 ~:', now)
     const hasSurpassed = now > timestamp
     const diffInMilliseconds = Math.abs(now - timestamp)
     const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60))
