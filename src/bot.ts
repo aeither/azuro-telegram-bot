@@ -342,40 +342,6 @@ bot.command('faucet', async (ctx) => {
   )
 })
 
-// bot.command('event', async (ctx) => {
-//   const { data } = await getSportEvent('123')
-//   /**
-//    * Show bet buttons
-//    */
-//   const markets = aggregateOutcomesByMarkets({
-//     lpAddress: liquidityPool.address,
-//     conditions,
-//   })
-//   const configKeyboard = new InlineKeyboard()
-
-//   // Iterate over the array and add concatenations dynamically
-//   for (const market of markets) {
-//     configKeyboard.text(market, outcome)
-//   }
-
-//   /**
-//    * Passing data to callback_query
-//    */
-//   const outcome = JSON.stringify({
-//     conditionId: 'condition',
-//     outcomeId: 'outcome',
-//     odds: 'oddz',
-//   })
-
-//   const configKeyboard = new InlineKeyboard()
-//     .text('gpt-3.5-turbo', outcome)
-//     .text('gpt-4', outcome)
-
-//   ctx.reply(`Current mode: Set gpt model.`, {
-//     reply_markup: configKeyboard,
-//   })
-// })
-
 bot.command('ping', (ctx) => ctx.reply(`Pong! ${new Date()} ${Date.now()}`))
 
 /**
@@ -399,8 +365,7 @@ bot.on('callback_query:data', async (ctx) => {
      * If select on bet/win condition
      */
     const payload = ctx.callbackQuery.data
-    const [, conditionId, outcomeId, odds] = payload.split(':');
-
+    const [, conditionId, outcomeId, odds] = payload.split(':')
   } else if (ctx.callbackQuery.data.indexOf('event:') !== -1) {
     /**
      * If select market from markets list
@@ -426,7 +391,7 @@ bot.on('callback_query:data', async (ctx) => {
           const { conditionId, outcomeId, odds, selectionName } = outcome as Outcome
           const payload = `bet:${conditionId}:${outcomeId}:${odds}`
 
-          betKeyboard.text(selectionName, payload)
+          betKeyboard.text(`${selectionName} - ${parseFloat(odds).toFixed(2)}`, payload)
         })
       }
     }
