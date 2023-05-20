@@ -20,6 +20,22 @@ const QUERY = `
         image
       }
       startsAt
+      liquidityPool {
+        address
+      }
+      conditions {
+        conditionId
+        status
+        outcomes {
+          id
+          outcomeId
+          odds
+        }
+        core {
+          address
+          type
+        }
+      }
     }
   }
 `

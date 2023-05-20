@@ -1,10 +1,9 @@
+import { freeStorage } from 'https://deno.land/x/grammy_storages@v2.2.0/free/src/mod.ts'
 import {
   getMarketName,
   getSelectionName,
 } from 'https://esm.sh/@azuro-org/dictionaries@3.0.1'
 import dayjs from 'https://esm.sh/dayjs@1.11.7'
-
-import { freeStorage } from 'https://deno.land/x/grammy_storages@v2.2.0/free/src/mod.ts'
 import { GATEWAY_FM_KEY, TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
 import { getBetsHistory } from '../lib/getBetsHistory.ts'
 import { getLiquidityPoolTransactions } from '../lib/getLiquidityPoolTransactions.ts'
@@ -102,7 +101,7 @@ bot.command('bets', async (ctx) => {
   } catch (error) {}
 
   ctx.reply(replyMessage, { parse_mode: 'Markdown' })
-  ctx.reply(`Profit/Loss: ${profit.toFixed(2)} WXDAI`, { parse_mode: 'Markdown' })
+  ctx.reply(`Win/Loss: ${profit.toFixed(2)} WXDAI`, { parse_mode: 'Markdown' })
 })
 
 bot.command('gasprice', async (ctx) => {
@@ -253,6 +252,7 @@ bot.command('events', async (ctx) => {
   let replyMessage = ''
   try {
     const events = await getSportEvents()
+    console.log('🚀 ~ file: bot.ts:255 ~ bot.command ~ events:', events)
 
     events.data.games.map((event) => {
       const { league, participants, sport, startsAt } = event

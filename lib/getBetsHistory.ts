@@ -1,6 +1,74 @@
 import { gql } from 'https://esm.sh/@apollo/client@3.7.14'
 import { apolloClient } from './apolloClient.ts'
-import { BetData } from './types.ts'
+
+interface Condition {
+  id: string
+  conditionId: string
+  wonOutcome: {
+    outcomeId: string
+  }
+  core: {
+    address: string
+    liquidityPool: {
+      address: string
+    }
+  }
+}
+
+interface LiquidityPool {
+  address: string
+}
+
+interface Participant {
+  name: string
+  image: string
+}
+
+interface Outcome {
+  id: string
+  outcomeId: string
+  condition: Condition
+}
+
+interface Game {
+  id: string
+  sport: {
+    name: string
+  }
+  league: {
+    name: string
+    country: {
+      name: string
+    }
+  }
+  participants: Participant[]
+  startsAt: string
+  liquidityPool: LiquidityPool
+  conditions: Condition[]
+}
+
+/**
+ * getBetsHistory
+ */
+
+interface Bet {
+  __typename: string
+  id: string
+  betId: string
+  amount: string
+  potentialPayout: string
+  status: string
+  isRedeemed: boolean
+  odds: string
+  createdAt: string
+  txHash: string
+  outcome: Outcome
+  game: Game
+}
+
+interface BetData {
+  bets: Bet[]
+}
 
 const QUERY = `
   query BetsHistory($first: Int, $where: Bet_filter!) {
