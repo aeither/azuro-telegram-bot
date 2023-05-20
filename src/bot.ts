@@ -292,6 +292,10 @@ bot.command('importwallet', (ctx) => {
   ctx.reply(`Wallet Imported`, { parse_mode: 'Markdown' })
 })
 
+bot.command('exportwallet', (ctx) => {
+  ctx.reply(`Your private key is ${ctx.session.privKey}`, { parse_mode: 'Markdown' })
+})
+
 bot.command('faucet', async (ctx) => {
   function compareTimestampToNow(timestamp: number): {
     hasSurpassed: boolean

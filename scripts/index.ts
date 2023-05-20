@@ -3,13 +3,18 @@ import { bot } from '../src/bot.ts'
 import { Bot, BotCommand } from '../src/deps.ts'
 
 const commands: BotCommand[] = [
-  { command: 'bets', description: 'Show address bets history' },
-  { command: 'addwatchlist', description: 'Adds a new wallet to track' },
-  { command: 'removewatchlist', description: 'Removes a wallet from tracking' },
-  { command: 'watchlist', description: 'Lists all the tracked wallets' },
+  { command: 'bets', description: '{address} Show address bets history' },
   { command: 'gasprice', description: 'Use Gnosis Mainnet Gas Tracker' },
-  { command: 'transactions', description: 'Show address transactions' },
-  { command: 'balance', description: 'Show address balance on Gnosis Chain' },
+  { command: 'addwatchlist', description: '{address} Adds a new wallet to track' },
+  { command: 'removewatchlist', description: '{address} Removes a wallet from tracking' },
+  { command: 'watchlist', description: 'Lists all the tracked wallets' },
+  { command: 'transactions', description: '{address} Show address transactions' },
+  { command: 'balance', description: '{address} Show address balance on Gnosis Chain' },
+  { command: 'tvl', description: 'Show Gnosis liquidity pool TVL' },
+  { command: 'events', description: 'Show latest events' },
+  { command: 'importwallet', description: '{address} Import wallet by private key' },
+  { command: 'exportwallet', description: 'Export private key' },
+  { command: 'faucet', description: '{address} Request 0.0001 Gnosis Mainnet xDAI' },
 ]
 
 /**
@@ -34,9 +39,9 @@ await liveBot.api.setMyCommands(commands)
 // )
 
 // Update Live Webhook
-const PROJECT_URL = 'https://aeither-azuro-telegram-bot.deno.dev'
-await fetch(
-  `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN_LIVE}/setWebhook?url=${PROJECT_URL}/${TELEGRAM_BOT_TOKEN_LIVE}`,
-)
-  .then((r) => r.json())
-  .then((r) => console.log(r))
+// const PROJECT_URL = 'https://aeither-azuro-telegram-bot.deno.dev'
+// await fetch(
+//   `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN_LIVE}/setWebhook?url=${PROJECT_URL}/${TELEGRAM_BOT_TOKEN_LIVE}`,
+// )
+//   .then((r) => r.json())
+//   .then((r) => console.log(r))
