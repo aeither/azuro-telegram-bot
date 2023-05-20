@@ -9,6 +9,9 @@ export {
   createPublicClient,
   http,
   parseEther,
+  parseUnits,
+  encodeAbiParameters,
+  parseAbiParameters,
 } from 'https://esm.sh/viem@0.3.31'
 export { privateKeyToAccount } from 'https://esm.sh/viem@0.3.31/accounts'
 export { gnosis } from 'https://esm.sh/viem@0.3.31/chains'

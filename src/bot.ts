@@ -3,11 +3,13 @@ import {
   getMarketName,
   getSelectionName,
 } from 'https://esm.sh/@azuro-org/dictionaries@3.0.1'
+import { ethers } from 'https://esm.sh/ethers@5.7.2'
 import { aggregateOutcomesByMarkets } from 'https://esm.sh/@azuro-org/toolkit@3.0.0'
 import dayjs from 'https://esm.sh/dayjs@1.11.7'
 import { GATEWAY_FM_KEY, TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
 import { getBetsHistory } from '../lib/getBetsHistory.ts'
 import { getLiquidityPoolTransactions } from '../lib/getLiquidityPoolTransactions.ts'
+import { getSportEvent } from '../lib/getSportEvent.ts'
 import { getSportEvents } from '../lib/getSportEvents.ts'
 import { getTvls } from '../lib/getTvl.ts'
 import {
@@ -17,16 +19,23 @@ import {
   removeAddress,
   shortenAddress,
 } from '../lib/helpers.ts'
+import { LP_ABI } from '../lib/lpAbi.ts'
 import { faucetClient, publicClient } from '../lib/viemClient.ts'
 import {
   Bot,
   Context,
   InlineKeyboard,
   SessionFlavor,
+  createWalletClient,
+  encodeAbiParameters,
+  gnosis,
+  http,
+  parseAbiParameters,
   parseEther,
+  parseUnits,
+  privateKeyToAccount,
   session,
 } from './deps.ts'
-import { getSportEvent } from '../lib/getSportEvent.ts'
 
 interface RpcResponse {
   jsonrpc: string
@@ -368,8 +377,91 @@ bot.on('callback_query:data', async (ctx) => {
     /**
      * If select on bet/win condition
      */
+    // const RPC_PROVIDER = 'https://rpc.gnosis.gateway.fm'
+    // const payload = ctx.callbackQuery.data
+    // const lpAddress = '0x204e7371ade792c5c006fb52711c50a7efc843ed'
+    // const coreAddress = '0xc95c831c7bdb0650b8cd5f2a542b263872d8ed0e'
+    // const [, conditionId, outcomeId, odds] = payload.split(':')
+    // console.log('🚀 ~ file: bot.ts:374 ~ bot.on ~ lpAddress:', lpAddress)
+    // const wagmiContractConfig = {
+    //   address: lpAddress,
+    //   abi: LP_ABI,
+    // }
+    // const deadline = Math.floor(Date.now() / 1000) + 2000
+    // const affiliate = '0x2a4De22d912dc6D79655D9fdb7068D3599a4C375' as `0x${string}`
+    // const betAmount = 100 // 100 xDAI
+    // const tokenDecimals = 18 // xDAI has 18 decimals
+    // const rawAmount = parseUnits(`${betAmount}`, tokenDecimals)
+    // const slippage = 5
+    // const minOdds = 1 + ((+odds - 1) * (100 - slippage)) / 100
+    // const rawMinOdds = parseUnits(`${minOdds}`, 12)
+    // const data = encodeAbiParameters(parseAbiParameters('uint256, uint64, uint64'), [
+    //   BigInt(conditionId),
+    //   BigInt(outcomeId),
+    //   rawMinOdds,
+    // ])
+    // const { request } = await publicClient.simulateContract({
+    //   ...wagmiContractConfig,
+    //   functionName: 'betNative',
+    //   value: parseEther('0.01'),
+    //   account: affiliate,
+    //   args: [
+    //     // deno-lint-ignore no-explicit-any
+    //     coreAddress as any,
+    //     BigInt(deadline),
+    //     {
+    //       affiliate,
+    //       data,
+    //     },
+    //   ],
+    // })
+    // const transport = http('https://rpc.gnosis.gateway.fm')
+    // const account = privateKeyToAccount(ctx.session.privKey as `0x${string}`)
+    // const walletClient = createWalletClient({
+    //   account,
+    //   chain: gnosis,
+    //   transport,
+    // })
+    // const hash = await walletClient.writeContract(request)
+    // ctx.reply(`Tx: ${shortenAddress(hash)}`, {
+    //   parse_mode: 'Markdown',
+    // })
+
+    const RPC_PROVIDER = 'https://rpc.gnosis.gateway.fm'
     const payload = ctx.callbackQuery.data
+    const lpAddress = '0x204e7371ade792c5c006fb52711c50a7efc843ed'
+    const coreAddress = '0xc95c831c7bdb0650b8cd5f2a542b263872d8ed0e'
     const [, conditionId, outcomeId, odds] = payload.split(':')
+
+    const provider = new ethers.providers.JsonRpcProvider(RPC_PROVIDER)
+    const wallet = new ethers.Wallet(ctx.session.privKey, provider)
+    const lpContract = new ethers.Contract(lpAddress, LP_ABI, wallet)
+
+    const deadline = Math.floor(Date.now() / 1000) + 2000
+    const affiliate = '...'
+
+    const betAmount = 1 // 100 xDAI
+    const tokenDecimals = 18 // xDAI has 18 decimals
+    const rawAmount = ethers.utils.parseUnits(String(betAmount), tokenDecimals)
+
+    const slippage = 5
+    const minOdds = 1 + ((+odds - 1) * (100 - slippage)) / 100
+    const rawMinOdds = ethers.utils.parseUnits(String(minOdds), 12)
+
+    const data = ethers.utils.defaultAbiCoder.encode(
+      ['uint256', 'uint64', 'uint64'],
+      [conditionId, outcomeId, rawMinOdds],
+    )
+
+    lpContract.betNative(
+      coreAddress,
+      deadline,
+      {
+        affiliate,
+        data,
+      },
+      { value: rawAmount },
+    )
   } else if (ctx.callbackQuery.data.indexOf('event:') !== -1) {
     /**
      * If select market from markets list
