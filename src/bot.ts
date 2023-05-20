@@ -452,7 +452,7 @@ bot.on('callback_query:data', async (ctx) => {
     const deadline = Math.floor(Date.now() / 1000) + 2000
     const affiliate = '0x2a4De22d912dc6D79655D9fdb7068D3599a4C375'
 
-    const betAmount = 1 // 100 xDAI
+    const betAmount = 0.0001 // 100 xDAI
     const tokenDecimals = 18 // xDAI has 18 decimals
     const rawAmount = ethers.utils.parseUnits(String(betAmount), tokenDecimals)
 
@@ -465,7 +465,7 @@ bot.on('callback_query:data', async (ctx) => {
       [conditionId, outcomeId, rawMinOdds],
     )
 
-    lpContract.betNative(
+    const tx = await lpContract.betNative(
       coreAddress,
       deadline,
       {
@@ -474,6 +474,11 @@ bot.on('callback_query:data', async (ctx) => {
       },
       { value: rawAmount },
     )
+
+    const formattedHash = shortenAddress(tx.hash)
+    ctx.reply(`*Hash* [${formattedHash}](https://gnosisscan.io/tx/${tx.hash})`, {
+      parse_mode: 'Markdown',
+    })
   } else if (ctx.callbackQuery.data.indexOf('event:') !== -1) {
     /**
      * If select market from markets list
