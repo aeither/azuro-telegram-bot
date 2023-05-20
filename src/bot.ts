@@ -3,6 +3,7 @@ import {
   getMarketName,
   getSelectionName,
 } from 'https://esm.sh/@azuro-org/dictionaries@3.0.1'
+import { aggregateOutcomesByMarkets } from 'https://esm.sh/@azuro-org/toolkit@3.0.0'
 import dayjs from 'https://esm.sh/dayjs@1.11.7'
 import { GATEWAY_FM_KEY, TELEGRAM_BOT_TOKEN } from '../lib/constants.ts'
 import { getBetsHistory } from '../lib/getBetsHistory.ts'
@@ -17,7 +18,15 @@ import {
   shortenAddress,
 } from '../lib/helpers.ts'
 import { faucetClient, publicClient } from '../lib/viemClient.ts'
-import { Bot, Context, SessionFlavor, parseEther, session } from './deps.ts'
+import {
+  Bot,
+  Context,
+  InlineKeyboard,
+  SessionFlavor,
+  parseEther,
+  session,
+} from './deps.ts'
+import { getSportEvent } from '../lib/getSportEvent.ts'
 
 interface RpcResponse {
   jsonrpc: string
@@ -250,22 +259,30 @@ bot.command('tvl', async (ctx) => {
 
 bot.command('events', async (ctx) => {
   let replyMessage = ''
+  const eventsKeyboard = new InlineKeyboard()
+
   try {
     const events = await getSportEvents()
-    console.log('🚀 ~ file: bot.ts:255 ~ bot.command ~ events:', events)
 
     events.data.games.map((event) => {
-      const { league, participants, sport, startsAt } = event
+      const { league, participants, sport, startsAt, id } = event // game
+
+      eventsKeyboard
+        .text(participants.map((p) => p.name).join(' - '), 'event:' + id)
+        .row()
 
       replyMessage +=
         `${sport.name} \n` +
         `${league.name} - ${league.country.name} \n` +
         `${formatTimestamp(+startsAt)} \n` +
-        `*Participants* ${participants.map((p) => p.name).join(', ')} \n\n`
+        `*Participants* ${participants.map((p) => p.name).join(' - ')} \n\n`
     })
   } catch (error) {}
 
-  ctx.reply(`${replyMessage}`, { parse_mode: 'Markdown' })
+  ctx.reply(`${replyMessage}`, {
+    reply_markup: eventsKeyboard,
+    parse_mode: 'Markdown',
+  })
 })
 
 bot.command('importwallet', (ctx) => {
@@ -325,4 +342,100 @@ bot.command('faucet', async (ctx) => {
   )
 })
 
+// bot.command('event', async (ctx) => {
+//   const { data } = await getSportEvent('123')
+//   /**
+//    * Show bet buttons
+//    */
+//   const markets = aggregateOutcomesByMarkets({
+//     lpAddress: liquidityPool.address,
+//     conditions,
+//   })
+//   const configKeyboard = new InlineKeyboard()
+
+//   // Iterate over the array and add concatenations dynamically
+//   for (const market of markets) {
+//     configKeyboard.text(market, outcome)
+//   }
+
+//   /**
+//    * Passing data to callback_query
+//    */
+//   const outcome = JSON.stringify({
+//     conditionId: 'condition',
+//     outcomeId: 'outcome',
+//     odds: 'oddz',
+//   })
+
+//   const configKeyboard = new InlineKeyboard()
+//     .text('gpt-3.5-turbo', outcome)
+//     .text('gpt-4', outcome)
+
+//   ctx.reply(`Current mode: Set gpt model.`, {
+//     reply_markup: configKeyboard,
+//   })
+// })
+
 bot.command('ping', (ctx) => ctx.reply(`Pong! ${new Date()} ${Date.now()}`))
+
+/**
+ * Listen to button events
+ */
+
+interface Outcome {
+  conditionId: string
+  outcomeId: string
+  lpAddress: string
+  coreAddress: string
+  selectionName: string
+  __typename: string
+  id: string
+  odds: string
+}
+
+bot.on('callback_query:data', async (ctx) => {
+  if (ctx.callbackQuery.data.indexOf('bet:') !== -1) {
+    /**
+     * If select on bet/win condition
+     */
+    const payload = ctx.callbackQuery.data
+    const [, conditionId, outcomeId, odds] = payload.split(':');
+
+  } else if (ctx.callbackQuery.data.indexOf('event:') !== -1) {
+    /**
+     * If select market from markets list
+     */
+    const eventId = ctx.callbackQuery.data.split(':')[1]
+
+    const { data } = await getSportEvent(eventId)
+    const { conditions, liquidityPool, participants } = data.game
+
+    /**
+     * Show bet buttons
+     */
+    const markets = aggregateOutcomesByMarkets({
+      lpAddress: liquidityPool.address,
+      conditions,
+    })
+    const betKeyboard = new InlineKeyboard()
+
+    // Iterate over the array and add concatenations dynamically
+    for (const market of markets) {
+      if (market.marketName === 'Full Time Result') {
+        market.outcomes[0].map((outcome) => {
+          const { conditionId, outcomeId, odds, selectionName } = outcome as Outcome
+          const payload = `bet:${conditionId}:${outcomeId}:${odds}`
+
+          betKeyboard.text(selectionName, payload)
+        })
+      }
+    }
+
+    ctx.reply(participants.map((p) => p.name).join(' - '), {
+      reply_markup: betKeyboard,
+      parse_mode: 'Markdown',
+    })
+  }
+
+  await ctx.answerCallbackQuery() // remove loading animation
+})

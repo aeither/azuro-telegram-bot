@@ -11,6 +11,7 @@ interface Core {
 
 interface Condition {
   conditionId: string
+  coreAddress: string
   status: string
   outcomes: Outcome[]
   core: Core
