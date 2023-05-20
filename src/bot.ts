@@ -23,6 +23,7 @@ import { LP_ABI } from '../lib/lpAbi.ts'
 import { faucetClient, publicClient } from '../lib/viemClient.ts'
 import {
   Bot,
+  BotError,
   Context,
   InlineKeyboard,
   SessionFlavor,
@@ -67,6 +68,11 @@ bot.use(
   }),
 )
 
+bot.catch(errorHandler)
+function errorHandler(err: BotError) {
+  console.error('Error in A, B, C, or D!', err)
+}
+
 /*
  * Bot Commands
  */
@@ -74,9 +80,13 @@ bot.command('bets', async (ctx) => {
   let replyMessage = ''
   let profit = 0
 
+  // const actorAddress = '0x7d2f1f75bd76da9558bd0c8bfc0618c96a6d40e5'
+  const actorAddress = ctx.match
+  if (actorAddress === '') {
+    ctx.reply('No address', { parse_mode: 'Markdown' })
+  }
+
   try {
-    // const actorAddress = '0x7d2f1f75bd76da9558bd0c8bfc0618c96a6d40e5'
-    const actorAddress = ctx.match
     const result = await getBetsHistory(actorAddress)
 
     result.data.bets.map((bet) => {
@@ -116,7 +126,9 @@ bot.command('bets', async (ctx) => {
         profit += parseFloat(potentialPayout)
       }
     })
-  } catch (error) {}
+  } catch (error) {
+    ctx.reply('Something went wrong', { parse_mode: 'Markdown' })
+  }
 
   ctx.reply(replyMessage, { parse_mode: 'Markdown' })
   ctx.reply(`Win/Loss: ${profit.toFixed(2)} WXDAI`, { parse_mode: 'Markdown' })
@@ -438,7 +450,7 @@ bot.on('callback_query:data', async (ctx) => {
     const lpContract = new ethers.Contract(lpAddress, LP_ABI, wallet)
 
     const deadline = Math.floor(Date.now() / 1000) + 2000
-    const affiliate = '...'
+    const affiliate = '0x2a4De22d912dc6D79655D9fdb7068D3599a4C375'
 
     const betAmount = 1 // 100 xDAI
     const tokenDecimals = 18 // xDAI has 18 decimals
