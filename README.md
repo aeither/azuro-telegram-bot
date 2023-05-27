@@ -16,9 +16,11 @@
 
 - Demo
 
-## Built With
+## Tech Stack
 
 grammyjs, typescript, azuro protocol, deno
+
+## Summary
 
 ## Description
 
@@ -41,6 +43,8 @@ grammyjs, typescript, azuro protocol, deno
 ## Usage
 
 ## Roadmap
+
+## Images
 
 Examples
 
