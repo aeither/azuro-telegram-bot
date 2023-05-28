@@ -156,3 +156,7 @@ grammyjs, typescript, azuro protocol, deno
 Successful Bet
 
 https://gnosisscan.io/tx/0x67aada2d4fd42f236ee4d8ddd511af87ee39911612b120d07bf2735c5f185af4
+
+Successful Faucet Claim
+
+https://gnosisscan.io/tx/0x26fb9c276e0ef373cf8a69f3c07ed329466943187c928af529ea134c9559df92
