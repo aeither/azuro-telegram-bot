@@ -1,7 +1,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/aeither/azuro-telegram-bot">
-    <img src="https://github.com/aeither/azuro-telegram-bot/assets/36173828/1189b040-90ae-4ce9-9cfb-3827d2b0e15a" alt="Logo" width="80" height="80">
+    <img src="https://github.com/aeither/azuro-telegram-bot/assets/36173828/a21734d4-033b-470b-a630-7e8be9649504" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Azuro Telegram Bot</h3>
