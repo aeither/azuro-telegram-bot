@@ -151,6 +151,27 @@ grammyjs, typescript, azuro protocol, deno
 
 ## Screenshots
 
+Successful Bet
+
+![Successful Bet](https://github.com/aeither/azuro-telegram-bot/assets/36173828/d5155e58-4284-4559-89a7-c068eb5a3184)
+
+History with Profit/Loss
+
+![History with Profit](https://github.com/aeither/azuro-telegram-bot/assets/36173828/a5e07952-4bab-4d6d-8e76-443aa08f52ff)
+
+History with Profit
+
+![History with Profit](https://github.com/aeither/azuro-telegram-bot/assets/36173828/ec36a1e3-da38-4fbf-8e08-fcf24556285c)
+
+Gnosis Faucet
+
+![Gnosis Faucet](https://github.com/aeither/azuro-telegram-bot/assets/36173828/81564a44-383b-42a5-8162-967529023ad6)
+
+Check on-chain stats
+
+![on-chain info](https://github.com/aeither/azuro-telegram-bot/assets/36173828/83f8cc7f-56fe-4dd1-bdc6-50e50b94c148)
+
+
 ## Examples
 
 Successful Bet
