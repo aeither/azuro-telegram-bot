@@ -148,6 +148,13 @@ Enable users to easily request from xDAI to start using Gnosis Chain on the go.
 
 grammyjs, typescript, azuro protocol, deno
 
+## What's Next
+
+Expand user base, 
+enhance bot functionalities, 
+improve UX, 
+integrate with additional protocols,
+explore partnerships for project growth.
 
 ## Screenshots
 
