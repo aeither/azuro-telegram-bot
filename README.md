@@ -151,26 +151,11 @@ grammyjs, typescript, azuro protocol, deno
 
 ## Screenshots
 
-Successful Bet
+![CleanShot 2023-05-29 at 00 08 10](https://github.com/aeither/azuro-telegram-bot/assets/36173828/2e6eb015-81ae-495a-8922-1d854e6f7130)
 
-![Successful Bet](https://github.com/aeither/azuro-telegram-bot/assets/36173828/d5155e58-4284-4559-89a7-c068eb5a3184)
+![CleanShot 2023-05-29 at 00 07 45](https://github.com/aeither/azuro-telegram-bot/assets/36173828/cc754938-ac6a-42be-ba9a-e19f78fbeabe)
 
-History with Profit/Loss
-
-![History with Profit](https://github.com/aeither/azuro-telegram-bot/assets/36173828/a5e07952-4bab-4d6d-8e76-443aa08f52ff)
-
-History with Profit
-
-![History with Profit](https://github.com/aeither/azuro-telegram-bot/assets/36173828/ec36a1e3-da38-4fbf-8e08-fcf24556285c)
-
-Gnosis Faucet
-
-![Gnosis Faucet](https://github.com/aeither/azuro-telegram-bot/assets/36173828/81564a44-383b-42a5-8162-967529023ad6)
-
-Check on-chain stats
-
-![on-chain info](https://github.com/aeither/azuro-telegram-bot/assets/36173828/83f8cc7f-56fe-4dd1-bdc6-50e50b94c148)
-
+![CleanShot 2023-05-29 at 00 07 12](https://github.com/aeither/azuro-telegram-bot/assets/36173828/a956e791-2cd2-424c-91de-042b55531525)
 
 ## Examples
 
