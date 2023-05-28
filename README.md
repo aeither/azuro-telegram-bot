@@ -1,11 +1,10 @@
 <br />
 <div align="center">
   <a href="https://github.com/aeither/azuro-telegram-bot">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://github.com/aeither/azuro-telegram-bot/assets/36173828/1189b040-90ae-4ce9-9cfb-3827d2b0e15a" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Azuro Telegram Bot</h3>
-
   <p align="center">
     Bet and check statistics on Gnosis
     <br />
@@ -14,13 +13,9 @@
 
 # Azuro Telegram Bot
 
-- Demo
+- [Azuro Telegram Bot](https://t.me/azuro_betting_2023_bot)
 
-## Tech Stack
-
-grammyjs, typescript, azuro protocol, deno
-
-### Summary
+## Summary
 
 Azuro Telegram Bot is a powerful tool that provides users with quick and convenient access to decentralized betting while on the go. With this bot, users can engage in secure and transparent betting activities directly through the popular messaging platform Telegram. It enable the users to
 
@@ -149,29 +144,14 @@ Enable users to easily request from xDAI to start using Gnosis Chain on the go.
   })
 ```
 
-## Installation
+## Tech Stack
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+grammyjs, typescript, azuro protocol, deno
 
-## Usage
 
-## Roadmap
+## Screenshots
 
-## Images
-
-Examples
+## Examples
 
 Successful Bet
 
